@@ -7,6 +7,7 @@ set nocp
 set shortmess=atI
 set enc=utf-8
 colorscheme nightmare
+let mapleader=","
 autocmd BufWritePost $MYVIMRC source $MYVIMRC " Immediate Apply
 " Editior
 set startofline
@@ -47,6 +48,11 @@ set wildmenu
 filetype off
 filetype plugin on
 filetype plugin indent on
+" Tmux
+if exists('$TMUX')
+	set term=screen-256color
+endif
+
 " Vundle
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -56,7 +62,6 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-" Neocomplcahe
 Plugin 'Shougo/neocomplcache'
 Plugin 'Shougo/neosnippet'
 Plugin 'Shougo/neosnippet-snippets'
@@ -64,6 +69,10 @@ Plugin 'vim-scripts/winmanager'
 Plugin 'The-NERD-tree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'EasyMotion'
+Plugin 'ctrlp.vim'
+Plugin 'TaskList.vim'
+"Plugin 'Syntastic'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -87,13 +96,10 @@ imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-" SuperTab like snippets behavior.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" Clsoe popup by <Space>.
+inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
 
 " For conceal markers.
 if has('conceal')
@@ -104,12 +110,14 @@ let g:neocomplcache_enable_auto_select = 1 " Auto select candidates
 let g:neocomplcache_enable_quick_match = 1 " Quick slect
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
+" winmanager
+"g:winManagerWindowLayout = 'The-NERD-tree,TagsExplorer|BufExplorer'
 " The NERD tree
 " Auto Starts
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Short Cuts
-map <C-n> :NERDTreeToggle<CR>
+map <Leader>z :NERDTreeToggle<CR>
 " Auto Close
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " vim-airline
@@ -117,3 +125,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_powerline_fronts = 1
+" EasyMotion
+let g:EasyMotion_leader_key = '<Leader>'
+" Tasklist
+map <leader>td <Plug>TaskList
