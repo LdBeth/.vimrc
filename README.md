@@ -1,2 +1,2 @@
-# .vimrc
-My vim setting file
+# LdBeth's User Files
+My Editor setting files.
