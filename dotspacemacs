@@ -59,23 +59,6 @@ values."
           erc-nick "LdBeth"
           erc-nick-uniquifier "`LdBeth"
           erc-nickserv-passwords
-          (quote
-           ((freenode (("LdBeth" . "eva#019283")))))
-          erc-server-list
-          '(("irc.freenode.net"
-             :port "6667"
-             :nick "LdBeth")
-            ("irc.ppy.sh"
-             :port "6667"
-             :nick "LdBeth"
-             :password "83eb1a1a"))
-          erc-networks-alist
-          (quote
-            ((freenode "freenode.net")
-             (Bancho "ppy.sh")))
-          erc-network-hide-list
-          (quote
-           (("Bancho" "JOIN" "PART" "QUIT")))
           erc-rename-buffers t
           erc-networks-mode t
           erc-prompt-for-nickserv-password nil
