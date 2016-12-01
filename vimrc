@@ -55,6 +55,8 @@ map <Leader>wk <C-w>k
 map <Leader>wl <C-w>l
 map <Leader>wh <C-w>h
 " Scroll
+map <Leader>, <C-u>
+map <Leader>. <C-d>
 map <Leader>; <C-b>
 map <Leader>' <C-f>
 " Splite
@@ -145,7 +147,7 @@ let g:neocomplcache_enable_underbar_completion = 1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Short Cuts
-map <Leader>z :NERDTreeToggle<CR>
+map <Leader>n :NERDTreeToggle<CR>
 " Auto Close
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " vim-airline
