@@ -49,11 +49,12 @@ filetype off
 filetype plugin on
 filetype plugin indent on
 " Key Bindings
-" Move Around the Windows
-map <Leader>wj <C-w>j
-map <Leader>wk <C-w>k
-map <Leader>wl <C-w>l
-map <Leader>wh <C-w>h
+" Windows
+map <Leader>j <C-w>j
+map <Leader>k <C-w>k
+map <Leader>l <C-w>l
+map <Leader>h <C-w>h
+map <Leader>= <C-w>=
 " Scroll
 map <Leader>, <C-u>
 map <Leader>. <C-d>
@@ -65,6 +66,13 @@ nnoremap <Leader>s <C-w>s
 " Quit
 map <Leader>x :quit<CR>
 map <Leader>X :qa!<CR>
+map <Leader>d :close<CR>
+map <Leader>o :only<CR>
+" Switch Buffers
+map <Leader>- :bp<CR>
+map <Leader>= :bn<CR>
+" New Tab
+map <Leader>+ :tabnew<CR>
 " Tab Jump
 map <Leader>1 1gt
 map <Leader>2 2gt
@@ -76,13 +84,32 @@ map <Leader>7 7gt
 map <Leader>8 8gt
 map <Leader>9 9gt
 " Cope
-map <Leader>c :botright cope<cr>
-map <Leader>r :cn<cr>
-map <Leader>p :cp<cr>
+map <Leader>c :botright cope<CR>
+map <Leader>r :cn<CR>
+map <Leader>p :cp<CR>
+" Zoom
+function! Zoom ()
+    " check if is the zoomed state (tabnumber > 1 && window == 1)
+    if tabpagenr('$') > 1 && tabpagewinnr(tabpagenr(), '$') == 1
+        let l:cur_winview = winsaveview()
+        let l:cur_bufname = bufname('')
+        tabclose
+
+        " restore the view
+        if l:cur_bufname == bufname('')
+            call winrestview(cur_winview)
+        endif
+    else
+        tab split
+    endif
+endfunction
+
+nmap <leader>z :call Zoom()<CR>
 " Tmux
 if exists('$TMUX')   
 	set term=screen-256color
 endif
+
 
 " Vundle
 " set the runtime path to include Vundle and initialize
@@ -156,7 +183,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_powerline_fronts = 1
 " EasyMotion
-let g:EasyMotion_leader_key = '<Leader>j'
+let g:EasyMotion_leader_key = "<Space>"
 " Tasklist
 map <Leader>td <Plug>TaskList
 let g:tlTokenList = ["FIXME", "TODO", "HACK", "NOTE", "WARN", "MODIFY"]
