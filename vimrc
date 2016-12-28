@@ -1,6 +1,6 @@
 " The Beginning of Nightmare
 " Maintainer:	Ldbeth <andpuke@foxmail.com>
-" Last Change:	2016 Dec 1
+" Last Change:	2016 Dec 28
 
 " Basic Settings
 set nocp
@@ -13,6 +13,7 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC " Immediate Apply
 set startofline
 set magic
 set cursorline
+set cursorcolumn
 set scrolloff=3
 " Statuas Line
 set ruler
@@ -26,6 +27,7 @@ set ignorecase
 set smartcase
 set hlsearch
 set incsearch
+nmap <silent> <leader>m :nohlsearch<CR>
 " Syntax
 syntax enable
 syntax on
@@ -33,12 +35,13 @@ set novisualbell
 autocmd InsertLeave * se nocul " Highlight
 autocmd InsertLeave * se cul " Highlight
 " Format
-nnoremap <F2> :set invpaste paste?<CR>
+nnoremap <Bslash> :set invpaste paste?<CR>
 imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
 set autoindent
 set smarttab
 set tabstop=4
+set shiftwidth=4
 " Complete
 set completeopt=preview,menu
 set infercase
@@ -49,44 +52,62 @@ filetype off
 filetype plugin on
 filetype plugin indent on
 " Key Bindings
+" Exit insert mode by typing fd
+inoremap fd <Esc>
 " Windows
-map <Leader>j <C-w>j
-map <Leader>k <C-w>k
-map <Leader>l <C-w>l
-map <Leader>h <C-w>h
-map <Leader>= <C-w>=
+map <Tab>j <C-w>j
+map <Tab>k <C-w>k
+map <Tab>l <C-w>l
+map <Tab>h <C-w>h
+map <Leader><Space> <C-w><C-w>
+map <Tab>= <C-w>=
 " Scroll
 map <Leader>, <C-u>
 map <Leader>. <C-d>
 map <Leader>; <C-b>
 map <Leader>' <C-f>
+" Editior
+map <Space>o o<Esc>
+map <Space>O O<Esc>
+map <Space>a a<CR><esc>
+map <Space>i i<CR><esc>
 " Splite
-nnoremap <Leader>v <C-w>v
-nnoremap <Leader>s <C-w>s
+nnoremap <Leader>/ <C-w>v
+nnoremap <Leader>- <C-w>s
 " Quit
 map <Leader>x :quit<CR>
 map <Leader>X :qa!<CR>
+map <Leader>q :x<CR>
 map <Leader>d :close<CR>
 map <Leader>o :only<CR>
+map <Leader>s :w<CR>
 " Switch Buffers
-map <Leader>- :bp<CR>
-map <Leader>= :bn<CR>
-" New Tab
-map <Leader>+ :tabnew<CR>
+map <Leader>[ :bp<CR>
+map <Leader>] :bn<CR>
+" Tab
+map <Tab><Tab> :tabnew<CR>
+map <Tab>[ :tabp<CR>
+map <Tab>] :tabn<CR>
 " Tab Jump
-map <Leader>1 1gt
-map <Leader>2 2gt
-map <Leader>3 3gt
-map <Leader>4 4gt
-map <Leader>5 5gt
-map <Leader>6 6gt
-map <Leader>7 7gt
-map <Leader>8 8gt
-map <Leader>9 9gt
+map <Tab><Space> gt
+map <Tab>1 1gt
+map <Tab>2 2gt
+map <Tab>3 3gt
+map <Tab>4 4gt
+map <Tab>5 5gt
+map <Tab>6 6gt
+map <Tab>7 7gt
+map <Tab>8 8gt
+map <Tab>9 9gt
+map <Tab>0 10gt
+" Run Command
+map <Leader>cv :AsyncRun vmd<CR>
+map <Leader>cf :AsyncRun open .<CR>
+map <Leader>cr :!ranger<CR>
 " Cope
-map <Leader>c :botright cope<CR>
-map <Leader>r :cn<CR>
-map <Leader>p :cp<CR>
+map <Leader>ee :botright cope<CR>
+map <Leader>e. :cn<CR>
+map <Leader>e, :cp<CR>
 " Zoom
 function! Zoom ()
     " check if is the zoomed state (tabnumber > 1 && window == 1)
@@ -118,6 +139,7 @@ call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
+" plugin from http://vim-scripts.org/vim/scripts.html
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Shougo/neocomplcache'
@@ -130,7 +152,8 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'EasyMotion'
 Plugin 'ctrlp.vim'
 Plugin 'TaskList.vim'
-"Plugin 'Syntastic'
+Plugin 'skywind3000/asyncrun.vim'
+Plugin 'Limbo-syntax'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -184,7 +207,23 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_powerline_fronts = 1
 " EasyMotion
 let g:EasyMotion_leader_key = "<Space>"
+" ctrlp
+let g:ctrlp_map = '<Space>p'
+map <Space>s :CtrlPMRU<CR>
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm|DS_Store)$',
+    \ 'file': '\v\.(so|zip|tar|tar.gz|pyc)$',
+    \ }
+let g:ctrlp_working_path_mode=0
+let g:ctrlp_match_window_bottom=1
+let g:ctrlp_max_height=15
+let g:ctrlp_match_window_reversed=0
+let g:ctrlp_mruf_max=500
+let g:ctrlp_follow_symlinks=1
 " Tasklist
 map <Leader>td <Plug>TaskList
 let g:tlTokenList = ["FIXME", "TODO", "HACK", "NOTE", "WARN", "MODIFY"]
 let g:tlWindowPosition = 1
+
+" This is the end of the vimrc file.
