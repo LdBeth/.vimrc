@@ -1,0 +1,100 @@
+# A basic .muttrc for use
+
+
+set from = "andpuke@foxmail.com" 
+set use_from = yes
+set envelope_from = yes
+set realname = "LdBeth"
+set sendmail = "msmtp"
+set editor = "emacsclient -c %s --alternate-editor vim"
+# Optional editors
+
+# Mail box
+set folder = "~/Mail/" 
+set mbox = "~/Mail/inbox/"
+set mbox_type = Maildir
+set spoolfile = "~/Mail/inbox/"
+set postponed = "~/Mail/postponed"
+set record = "~/Mail/sent"
+mailboxes "=inbox" $MAIL
+mailboxes "=drafts" $MAIL
+mailboxes "=sent"  $MAIL
+
+# Get mail
+macro index G "!~/.getmail/getmail\n" "Invoke getmail"
+macro pager G "!~/.getmail/getmail\n" "Invoke getmail"
+
+# Miscellaneous
+set header = no
+set move = no 
+#set include 
+set indent_str = ">"
+set tilde
+set pager_stop
+#set menu_scroll
+set fast_reply
+set wait_key = yes
+set prompt_after = no
+set resolve = yes
+set auto_tag = yes 
+set ascii_chars = yes
+set thorough_search = yes
+set ascii_chars = yes
+ignore "Authentication-Results:" 
+set edit_headers = yes
+ignore "DomainKey-Signature:" 
+set pager_index_lines = 5
+ignore "DKIM-Signature:" 
+hdr_order Date From To Cc 
+alternative_order text/plain text/html * 
+auto_view text/html 
+bind editor <Tab> complete-query 
+bind editor ^T complete 
+bind editor <space> noop
+# Neomutt
+source ~/.mutt/neo.muttrc
+
+# Attachments
+set rfc2047_parameters=yes
+
+# Sort
+set sort = score
+set sort_browser = alpha
+score "~N" +4
+score "~O" +1
+score "~s Development" +3
+score "~s Notification" +3
+score "~D" -5
+
+# Color
+source ~/.mutt/color.muttrc
+#color status black cyan
+#color indicator black white
+#color quoted brightgreen black
+#color header yellow black ^from
+#color header yellow black ^to
+#color header cyan black ^subject
+#color header green black ^date
+
+#color index yellow black "~D"
+#color index brightgreen black "~U"
+color index brightwhite magenta "Development"
+
+# Improve Settings
+# use very high $read_inc to speed up reading hcache'd maildirs
+folder-hook . 'set read_inc=1000'
+
+# Name lists
+source ~/.mutt/mutt.alias
+set alias_file = ~/.mutt/mutt.alias
+set query_command = "lbdbq '%s'"
+set sort_alias = alias
+
+
+# Gmail-style keyboard shortcuts 
+#macro index,pager y "<enter-command>unset trash\n <delete-message>" "Gmail archive message" 
+#macro index,pager d "<enter-command>set trash=\"imaps://imap.googlemail.com/[GMail]/Bin\"\n <delete-message>" "Gmail delete message" 
+#macro index,pager gi "<change-folder>=INBOX<enter>" "Go to inbox" 
+#macro index,pager ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail" 
+#macro index,pager gs "<change-folder>=[Gmail]/Starred<enter>" "Go to starred messages" 
+#macro index,pager gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
