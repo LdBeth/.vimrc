@@ -1,12 +1,13 @@
 " The Beginning of Nightmare
 " Maintainer:	Ldbeth <andpuke@foxmail.com>
-" Last Change:	2016 Dec 28
+" Last Change:	2017 Feb 14
 
 " Basic Settings
 set nocp
 set shortmess=atI
 set enc=utf-8
 colorscheme nightmare
+set background=dark
 let mapleader=","
 autocmd BufWritePost $MYVIMRC source $MYVIMRC " Immediate Apply
 " Editior
@@ -15,13 +16,20 @@ set magic
 set cursorline
 set cursorcolumn
 set scrolloff=3
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+"set lazyredraw
 " Statuas Line
 set ruler
 set number
+"set relativenumber
+set hid
 set showcmd
+set showtabline=0
 set laststatus=2
-set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
-set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+set ttimeoutlen=50
+"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+"set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 " Search
 set ignorecase
 set smartcase
@@ -29,19 +37,21 @@ set hlsearch
 set incsearch
 nmap <silent> <leader>m :nohlsearch<CR>
 " Syntax
-syntax enable
 syntax on
+syntax enable
 set novisualbell
 autocmd InsertLeave * se nocul " Highlight
-autocmd InsertLeave * se cul " Highlight
+autocmd InsertLeave * se cul " High
 " Format
 nnoremap <Bslash> :set invpaste paste?<CR>
 imap <F2> <C-O>:set invpaste paste?<CR>
 set pastetoggle=<F2>
-set autoindent
+"set expandtab
 set smarttab
 set tabstop=4
 set shiftwidth=4
+set lbr
+set tw=500
 " Complete
 set completeopt=preview,menu
 set infercase
@@ -51,9 +61,40 @@ set wildmenu
 filetype off
 filetype plugin on
 filetype plugin indent on
+set autoread
 " Key Bindings
 " Exit insert mode by typing fd
 inoremap fd <Esc>
+" Visual mode searching
+function! CmdLine(str)
+    exe "menu Foo.Bar :" . a:str
+    emenu Foo.Bar
+    unmenu Foo
+endfunction
+function! VisualSelection(direction) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
+vnoremap <silent> gv :call VisualSelection('gv')<CR>
+vnoremap <silent> <Space>r :call VisualSelection('replace')<CR>
 " Windows
 map <Tab>j <C-w>j
 map <Tab>k <C-w>k
@@ -88,6 +129,7 @@ map <Leader>] :bn<CR>
 map <Tab><Tab> :tabnew<CR>
 map <Tab>[ :tabp<CR>
 map <Tab>] :tabn<CR>
+map <Tab>o :tabonly<CR>
 " Tab Jump
 map <Tab><Space> gt
 map <Tab>1 1gt
@@ -126,10 +168,9 @@ function! Zoom ()
 endfunction
 
 nmap <leader>z :call Zoom()<CR>
-" Tmux
-if exists('$TMUX')   
-	set term=screen-256color
-endif
+
+" crontab Problem
+autocmd filetype crontab setlocal nobackup nowritebackup
 
 
 " Vundle
@@ -154,6 +195,7 @@ Plugin 'ctrlp.vim'
 Plugin 'TaskList.vim'
 Plugin 'skywind3000/asyncrun.vim'
 Plugin 'Limbo-syntax'
+Plugin 'tpope/vim-surround'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -197,14 +239,28 @@ let g:neocomplcache_enable_underbar_completion = 1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Short Cuts
-map <Leader>n :NERDTreeToggle<CR>
+map <Leader>t :NERDTreeToggle<CR>
 " Auto Close
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " vim-airline
 "let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#bufferline#overwrite_variables = 1
 let g:airline_powerline_fronts = 1
+let g:airline_detect_spell=1
+"function! HasPaste()
+"    if &paste
+"        return ' P'
+"    en
+"    return ' E'
+"endfunction
+"let g:airline_section_a = '%{bufnr("%")}%{HasPaste()}'
+"function! Buf_total_num()
+"    return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+"endfunction
+"let g:airline_theme = 'violet'
 " EasyMotion
 let g:EasyMotion_leader_key = "<Space>"
 " ctrlp
