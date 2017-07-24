@@ -3,7 +3,6 @@
 " Last Change:	2017 Feb 14
 
 " Basic Settings
-set nocp
 set shortmess=atI
 set enc=utf-8
 colorscheme nightmare
@@ -112,6 +111,11 @@ map <Space>o o<Esc>
 map <Space>O O<Esc>
 map <Space>a a<CR><esc>
 map <Space>i i<CR><esc>
+" Hybird
+imap <C-F> <Right>
+imap <C-B> <Left>
+imap <C-A> <Home>
+imap <C-E> <End>
 " Splite
 nnoremap <Leader>/ <C-w>v
 nnoremap <Leader>- <C-w>s
@@ -173,32 +177,27 @@ nmap <leader>z :call Zoom()<CR>
 autocmd filetype crontab setlocal nobackup nowritebackup
 
 
-" Vundle
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
+" Vim-Plug
 " plugin from http://vim-scripts.org/vim/scripts.html
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Shougo/neocomplcache'
-Plugin 'Shougo/neosnippet'
-Plugin 'Shougo/neosnippet-snippets'
-Plugin 'vim-scripts/winmanager'
-Plugin 'The-NERD-tree'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'EasyMotion'
-Plugin 'ctrlp.vim'
-Plugin 'TaskList.vim'
-Plugin 'skywind3000/asyncrun.vim'
-Plugin 'Limbo-syntax'
-Plugin 'tpope/vim-surround'
+call plug#begin('~/.vim/plugged')
 
+Plug 'Shougo/neocomplcache'
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'vim-scripts/winmanager'
+Plug 'The-NERD-tree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'EasyMotion'
+Plug 'ctrlp.vim'
+Plug 'TaskList.vim'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'Limbo-syntax'
+Plug 'tpope/vim-surround'
+Plug 'junegunn/vim-easy-align'
+
+call plug#end()
 " All of your Plugins must be added before the following line
-call vundle#end()
 
 " NFO
 function! SetFileEncodings(encodings)
@@ -215,21 +214,30 @@ au BufReadPost *.nfo call RestoreFileEncodings()
 " Plugin Settings
 " Neocomplcahe
 " Plugin key-mappings.
-imap <C-f>     <Plug>(neosnippet_expand_or_jump)
-smap <C-f>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-f>     <Plug>(neosnippet_expand_target)
-
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" Clsoe popup by <Space>.
-inoremap <expr><Space>  pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+" TAB Expand
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 " For conceal markers.
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+" Clsoe popup by <Space>.
+inoremap <expr><Space>  pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+" Settings
 let g:neocomplcache_enable_at_startup = 1 " Start Neocomplcahce
 let g:neocomplcache_enable_auto_select = 0 " Auto select candidates
 let g:neocomplcache_enable_quick_match = 1 " Quick slect
+let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
 " winmanager
@@ -260,7 +268,7 @@ let g:airline_detect_spell=1
 "function! Buf_total_num()
 "    return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 "endfunction
-"let g:airline_theme = 'violet'
+let g:airline_theme = 'distinguished'
 " EasyMotion
 let g:EasyMotion_leader_key = "<Space>"
 " ctrlp
@@ -281,5 +289,10 @@ let g:ctrlp_follow_symlinks=1
 map <Leader>td <Plug>TaskList
 let g:tlTokenList = ["FIXME", "TODO", "HACK", "NOTE", "WARN", "MODIFY"]
 let g:tlWindowPosition = 1
+" EasyAlign
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 " This is the end of the vimrc file.
